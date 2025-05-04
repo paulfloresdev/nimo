@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import NotFound from '../components/NotFound'; // Componente 404
 
 const Home = React.lazy(() => import("../views/Home.tsx"));
-const Months = React.lazy(() => import("../views/Months.tsx"));
+const Months = React.lazy(() => import("../views/Months/Months.tsx"));
 
 
 const AppRoutes = () => (

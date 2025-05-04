@@ -1,17 +1,5 @@
+import { AuthCredentials, SignupData } from '../interfaces/authInterfaces';
 import axiosClient from './axiosClient';
-
-export interface AuthCredentials {
-    email: string;
-    password: string;
-}
-
-export interface SignupData {
-    name: string;
-    lastname: string;
-    phone: string;
-    email:string;
-    password: string;
-}
 
 // POST: Registro de usuario
 export const signup = (data: SignupData) => axiosClient.post('/auth/signup', data);

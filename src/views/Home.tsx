@@ -1,11 +1,11 @@
 import React from "react";
 import Layout from "../components/layout/Layout";
-import { Card, CardBody, Tab, Tabs } from "@heroui/react";
+import { Tab, Tabs } from "@heroui/react";
 
 const Home: React.FC = () => {
     return (
         <Layout page={0}>
-            <div>
+            <div className="w-">
                 <span className="font-semibold">Mis tarjetas</span>
             </div>
             <Tabs aria-label="Options">

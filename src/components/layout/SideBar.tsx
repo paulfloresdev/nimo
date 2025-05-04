@@ -28,7 +28,7 @@ const SideBar: React.FC<SideBarProps> = ({ page }) => {
             className={`
                 flex flex-col bg-neutral-100 border-r
                 transition-all duration-300 ease-in-out
-                hidden md:flex py-6
+                hidden lg:flex py-6
                 h-screen overflow-hidden
                 max-w-72 min-w-72
             `}

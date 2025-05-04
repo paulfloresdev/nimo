@@ -1,7 +1,9 @@
 import React from "react";
-import BottomNav from "../BottomNav";
+import BottomNav from "./BottomNav";
 import SideBar from "./SideBar";
 import { LayoutProps } from "../../interfaces/layoutInterfaces";
+import DynamicFaIcon from "../DynamicFaIcon";
+import { Button } from "@heroui/react";
 
 const Layout: React.FC<LayoutProps> = ({ children, page }) => {
     return (
@@ -10,12 +12,17 @@ const Layout: React.FC<LayoutProps> = ({ children, page }) => {
             <SideBar page={page} />
 
             {/* Contenido */}
-            <div className="w-full p-4"> {/* Agregamos un margen izquierdo cuando el sidebar está presente */}
+            <div className="w-full p-8"> {/* Agregamos un margen izquierdo cuando el sidebar está presente */}
+                <div className="w-full flex flex-row justify-between mb-8 md:hidden">
+                    <img src="/assets/favicon.png" alt="Logo" className="w-16" />
+                    <DynamicFaIcon name="FaBars" className="text-neutral-950"/>
+                    
+                </div>
                 {children}
             </div>
 
             {/* BottomNav: solo en móvil */}
-            <BottomNav />
+            <BottomNav page={0}/>
         </div>
     );
 }

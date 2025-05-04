@@ -12,6 +12,17 @@ export interface SideBarOptionProps {
     href: string
 }
 
+export interface BottomNavProps {
+    page: number
+}
+
+export interface BottomNavOptionsProps {
+    page: number,
+    index: number,
+    icon: string,
+    href: string
+}
+
 export interface LayoutProps extends SideBarProps {
     children: ReactNode;
     page: number;
