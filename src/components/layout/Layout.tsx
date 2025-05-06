@@ -3,7 +3,6 @@ import BottomNav from "./BottomNav";
 import SideBar from "./SideBar";
 import { LayoutProps } from "../../interfaces/layoutInterfaces";
 import DynamicFaIcon from "../DynamicFaIcon";
-import { Button } from "@heroui/react";
 
 const Layout: React.FC<LayoutProps> = ({ children, page }) => {
     return (
@@ -22,7 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children, page }) => {
             </div>
 
             {/* BottomNav: solo en móvil */}
-            <BottomNav page={0}/>
+            <BottomNav page={page}/>
         </div>
     );
 }

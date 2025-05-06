@@ -1,35 +1,31 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/layout/Layout";
-import { getMonthsWith, getYearsWith } from "../../api/transactionsService";
-import { Card, Divider, Select, SelectItem, Skeleton } from "@heroui/react";
-import { monthNames, MonthYear } from "../../types/Month";
+import { getMonthsWith } from "../../api/transactionsService";
+import { Divider, Select, SelectItem, Skeleton } from "@heroui/react";
+import { GetMonthsWithResponse } from "../../types/Month";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../backend/store/config/store";
+import { getYearsWithRequest } from "../../backend/store/features/yearsWith/yearsWithSlice";
 
-const Months: React.FC = () => {
+const MonthList: React.FC = () => {
+    const dispatch = useDispatch();
+    const { years, loading: loadingYears, error: errorYears } = useSelector((state: RootState) => state.years_with);
     const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
-    const [years, setYears] = useState<number[]>([]);
-    const [months, setMonths] = useState<MonthYear[]>([]);
+
+    const [monthsWithData, setMonthsWithData] = useState<GetMonthsWithResponse | undefined>(undefined);
     const [page, setPage] = useState<string | undefined>(undefined);
-    const [loadingYears, setLoadingYears] = useState(true);
     const [loadingMonths, setLoadingMonths] = useState(false);
 
     useEffect(() => {
-        getYearsWith()
-        .then((res) => {
-            setYears(res.data.data);
-        })
-        .catch((err) => {
-            console.error('Error al obtener usuario:', err);
-        })
-        .finally(() => {
-            setLoadingYears(false);
-        });
-    }, []);
+            dispatch(getYearsWithRequest());
+        }, [dispatch]);
 
     useEffect(() => {
         setLoadingMonths(true);
         getMonthsWith(selectedYear, page)
         .then((res) => {
-            setMonths(res.data.data.data);
+            setMonthsWithData(res.data);
+            console.log(monthsWithData);
         })
         .catch((err) => {
             console.error('Error al obtener meses:', err);
@@ -62,7 +58,7 @@ const Months: React.FC = () => {
                                 placeholder="Todos"
                                 onChange={(e) => setSelectedYear(Number(e.target.value))}
                                 >
-                                {years.map((year) => (
+                                {years === null ? null : years.map((year) => (
                                     <SelectItem key={year}>{year.toString()}</SelectItem>
                                 ))}
                                 </Select>
@@ -73,19 +69,30 @@ const Months: React.FC = () => {
                 <div>
                     {
                         loadingMonths ? (
-                            <Skeleton className="h-10 w-32 rounded-md" />
+                            <div className="w-full grid gap-x-4 gap-y-4 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                            {[...Array(12)].map((_, index) => (
+                                <Skeleton key={index} className="rounded-md h-24 w-full" />
+                            ))}
+                            </div>
+
                         ) : (
                             <div>
                                 <div className="grid gap-x-4 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                                    {months.map((m) => (
-                                        <Card key={m.month+m.year} className="rounded-md flex flex-col justify-center items-center gap-y-4 p-4" isHoverable={true}>
-                                            <span className="font-semibold">{monthNames[m.month - 1]}</span>
-                                            <span className="text-sm">{m.year}</span>
-                                        </Card>
-                                    ))}
-                                    {months.length === 0 && (
-                                        <span className="text-gray-500">No hay transacciones en este año</span>
-                                    )}
+                                    <span>{`${monthsWithData?.data}`}</span>
+                                {
+                                    /*
+                                        {months.map((m) => (
+                                            <Card key={m.month+m.year} className="rounded-md flex flex-col justify-center items-center gap-y-4 p-4" isHoverable={true}>
+                                                <span className="font-semibold">{monthNames[m.month - 1]}</span>
+                                                <span className="text-sm">{m.year}</span>
+                                            </Card>
+                                        ))}
+                                        {months.length === 0 && (
+                                            <span className="text-gray-500">No hay transacciones en este año</span>
+                                        )}
+                                    */
+                                }
+                                    
                                 </div>
                                 
                             </div>
@@ -98,4 +105,4 @@ const Months: React.FC = () => {
     );
 };
 
-export default Months;
+export default MonthList;

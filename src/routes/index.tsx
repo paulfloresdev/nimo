@@ -1,9 +1,12 @@
 import React from "react";
 import { Route, Routes } from 'react-router-dom';
 import NotFound from '../components/NotFound'; // Componente 404
+import PrivateRoute from "../components/PrivateRoute.tsx";
 
 const Home = React.lazy(() => import("../views/Home.tsx"));
-const Months = React.lazy(() => import("../views/Months/Months.tsx"));
+const MonthList = React.lazy(() => import("../views/Months/MonthList.tsx"));
+const Test = React.lazy(() => import("../views/test.tsx"));
+const Login = React.lazy(() => import("../views/auth/Login.tsx"));
 
 
 const AppRoutes = () => (
@@ -13,7 +16,9 @@ const AppRoutes = () => (
             path="/dashboard/"
             element={
                 <React.Suspense fallback={<div>Loading...</div>}>
-                    <Home></Home>
+                    <PrivateRoute>
+                        <Home />
+                    </PrivateRoute>
                 </React.Suspense>
             }
         />
@@ -21,7 +26,25 @@ const AppRoutes = () => (
             path="/dashboard/months"
             element={
                 <React.Suspense fallback={<div>Loading...</div>}>
-                    <Months/>
+                    <PrivateRoute>
+                        <MonthList />
+                    </PrivateRoute>
+                </React.Suspense>
+            }
+        />
+        <Route
+            path="/test"
+            element={
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    <Test/>
+                </React.Suspense>
+            }
+        />
+        <Route
+            path="/login"
+            element={
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    <Login/>
                 </React.Suspense>
             }
         />

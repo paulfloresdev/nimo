@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { SideBarProps } from '../../interfaces/layoutInterfaces';
 import SideBarOption from './SidebarOption';
-import { Button, Divider, Skeleton } from '@heroui/react';
-import { User } from '../../types/User';
-import { me } from '../../api/authService';
+import { Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Skeleton } from '@heroui/react';
 import DynamicFaIcon from '../DynamicFaIcon';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../backend/store/config/store';
+import { logoutRequest, meRequest } from '../../backend/store/features/auth/authSlice';
+import { useNavigate } from 'react-router';
 
 const SideBar: React.FC<SideBarProps> = ({ page }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+    const { user, loading, error } = useSelector((state: RootState) => state.auth);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        me()
-        .then((res) => {
-            setUser(res.data);
-        })
-        .catch((err) => {
-            console.error('Error al obtener usuario:', err);
-        })
-        .finally(() => {
-            setLoading(false);
-        });
-    }, []);
+        dispatch(meRequest());
+    }, [dispatch]);
+    
+    const handleLogout = () => {
+        dispatch(logoutRequest())
+        navigate('/login');
+    }
 
     return (
         <aside
@@ -103,21 +102,34 @@ const SideBar: React.FC<SideBarProps> = ({ page }) => {
                     ) : (
                         <div>
                             <Divider className='mb-4'/>
-                            <Button
-                                variant="light"
-                                className="w-full h-14 flex flex-row items-center justify-between space-x-2"
-                            >
-                                <div className="bg-neutral-200 w-14 h-10 rounded-full flex justify-center items-center border border-neutral-300">
-                                    <span className="font-semibold text-base text-neutral-950">
-                                        PF
-                                    </span>
-                                </div>
-                                <div className="flex flex-col justify-start items-start">
-                                    <span className="text-neutral-950 font-semibold">{`${user?.name} ${user?.lastname}`}</span>
-                                    <span className="text-xs text-gray-700">{user?.email}</span>
-                                </div>
-                                <DynamicFaIcon name="FaAngleUp" className="text-gray-400 ml-auto" />
-                            </Button>
+                            <Dropdown>
+                                <DropdownTrigger>
+                                    <Button
+                                        variant="light"
+                                        className="w-full h-14 flex flex-row items-center justify-between space-x-2"
+                                    >
+                                        <div className="bg-neutral-200 w-14 h-10 rounded-full flex justify-center items-center border border-neutral-300">
+                                            <span className="font-semibold text-base text-neutral-950">
+                                                {
+                                                    `${user?.name[0].toUpperCase()}${user?.lastname[0].toUpperCase()}`
+                                                }
+                                            </span>
+                                        </div>
+                                        <div className="flex flex-col justify-start items-start">
+                                            <span className="text-neutral-950 font-semibold">{`${user?.name} ${user?.lastname}`}</span>
+                                            <span className="text-xs text-gray-700">{user?.email}</span>
+                                        </div>
+                                        <DynamicFaIcon name="FaAngleUp" className="text-gray-400 ml-auto" />
+                                    </Button>
+                                </DropdownTrigger>
+                                <DropdownMenu aria-label="Static Actions">
+                                    <DropdownItem key="edit">Editar datos de usuario</DropdownItem>
+                                    <DropdownItem key="delete" className="text-danger" color="danger" onClick={handleLogout}>
+                                        Cerrar sesión
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                            
                         </div>
                     )}
                 </div>
