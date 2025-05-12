@@ -1,13 +1,15 @@
 // backend.ts
 
+import { AuthCredentials } from "../../interfaces/authInterfaces";
 import { APIClient } from "./configurations";
 import * as url from "./url";
 
 const api = new APIClient();
 
 //---AUTH--------------------------------------------------
+
 //  * login
-export const loginRequest = async (data: { email: string; password: string }) =>
+export const loginRequest = async (data: AuthCredentials) =>
     await api.create(url.AUTH_LOGIN, data);
 
 //  * register
@@ -51,5 +53,15 @@ export const updatePasswordRequest = async (
 
 
 //  ---TRANSACTIONS--------------------------------------------------
+
 //  * getYearsWith
 export const getYearsWithRequest = async () => await api.get(`${url.GET_YEARS_WITH}`);
+
+//  * getMonthsWith
+export const getMonthsWithRequest = async (data: { year?: number; page?: number }) => {
+    const page = data.page ?? 1;
+    const body = data.year !== undefined ? { year: data.year } : {};
+
+    return await api.create(`${url.GET_MONTHS_WITH}?page=${page}`, body);
+};
+

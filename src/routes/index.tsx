@@ -5,6 +5,8 @@ import PrivateRoute from "../components/PrivateRoute.tsx";
 
 const Home = React.lazy(() => import("../views/Home.tsx"));
 const MonthList = React.lazy(() => import("../views/Months/MonthList.tsx"));
+const MonthDetail = React.lazy(() => import("../views/Months/MonthDetail.tsx"));
+
 const Test = React.lazy(() => import("../views/test.tsx"));
 const Login = React.lazy(() => import("../views/auth/Login.tsx"));
 
@@ -32,6 +34,18 @@ const AppRoutes = () => (
                 </React.Suspense>
             }
         />
+        <Route
+            path="/dashboard/month"
+            element={
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    <PrivateRoute>
+                        <MonthDetail />
+                    </PrivateRoute>
+                </React.Suspense>
+            }
+        />
+
+        
         <Route
             path="/test"
             element={

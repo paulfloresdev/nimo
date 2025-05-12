@@ -1,39 +1,31 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/layout/Layout";
-import { getMonthsWith } from "../../api/transactionsService";
-import { Divider, Select, SelectItem, Skeleton } from "@heroui/react";
-import { GetMonthsWithResponse } from "../../types/Month";
+import { Card, Divider, Pagination, Select, SelectItem, Skeleton } from "@heroui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../backend/store/config/store";
 import { getYearsWithRequest } from "../../backend/store/features/yearsWith/yearsWithSlice";
+import { getMonthsWithRequest } from "../../backend/store/features/monthsWith/monthsWithSlice";
+import { monthNames } from "../../types/Month";
+import { useNavigate } from "react-router-dom";
 
 const MonthList: React.FC = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { years, loading: loadingYears, error: errorYears } = useSelector((state: RootState) => state.years_with);
+    const { years, loading: loadingYears } = useSelector((state: RootState) => state.years_with);
+    const { data: months, totalPages, page, loading: loadingMonths } = useSelector((state: RootState) => state.months_with);
     const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
-
-    const [monthsWithData, setMonthsWithData] = useState<GetMonthsWithResponse | undefined>(undefined);
-    const [page, setPage] = useState<string | undefined>(undefined);
-    const [loadingMonths, setLoadingMonths] = useState(false);
+    const [currentPage, setCurrentPage] = useState<number | undefined>(page ?? 1);
 
     useEffect(() => {
-            dispatch(getYearsWithRequest());
-        }, [dispatch]);
+        dispatch(getYearsWithRequest());
+        dispatch(getMonthsWithRequest({year: undefined, page:undefined}))
+    }, [dispatch]);
 
     useEffect(() => {
-        setLoadingMonths(true);
-        getMonthsWith(selectedYear, page)
-        .then((res) => {
-            setMonthsWithData(res.data);
-            console.log(monthsWithData);
-        })
-        .catch((err) => {
-            console.error('Error al obtener meses:', err);
-        })
-        .finally(() => {
-            setLoadingMonths(false);
-        });
-    }, [selectedYear]);
+        dispatch(getMonthsWithRequest({ year: selectedYear, page: currentPage }));
+    }, [selectedYear, currentPage]);
+    
+
 
     return (
         <Layout page={1}>
@@ -52,6 +44,7 @@ const MonthList: React.FC = () => {
                             <div className="w-48">
                                 <Select
                                 key={'inside'}
+                                value={selectedYear}
                                 className="max-w-xs"
                                 label="Año:"
                                 labelPlacement={'outside-left'}
@@ -69,36 +62,64 @@ const MonthList: React.FC = () => {
                 <div>
                     {
                         loadingMonths ? (
-                            <div className="w-full grid gap-x-4 gap-y-4 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                            {[...Array(12)].map((_, index) => (
-                                <Skeleton key={index} className="rounded-md h-24 w-full" />
-                            ))}
+                            <div>
+                                <div className="w-full grid gap-x-4 gap-y-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-12 mb-6">
+                                {[...Array(12)].map((_, index) => (
+                                    <Skeleton key={index} className="rounded-md h-24 w-full" />
+                                ))}
+                                </div>
+                                <Skeleton className="rounded-md w-32">
+                                    <div className="h-10">as</div>
+                                </Skeleton> 
                             </div>
+                            
+                            
 
                         ) : (
                             <div>
-                                <div className="grid gap-x-4 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                                    <span>{`${monthsWithData?.data}`}</span>
+                                <div className="grid gap-x-4 gap-y-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-12 mb-6">
                                 {
-                                    /*
-                                        {months.map((m) => (
-                                            <Card key={m.month+m.year} className="rounded-md flex flex-col justify-center items-center gap-y-4 p-4" isHoverable={true}>
-                                                <span className="font-semibold">{monthNames[m.month - 1]}</span>
-                                                <span className="text-sm">{m.year}</span>
+                                    months.map((m) => (
+                                        <div
+                                        onClick={() => {
+                                            console.log('Click detectado.');
+                                            navigate('/dashboard/month', { state: { year: m.year, month: m.month } });
+                                        }}
+                                        >
+                                            <Card
+                                            key={`${m.year}-${m.month}`}
+                                            className="rounded-md flex flex-col justify-center items-center gap-y-4 p-4 cursor-pointer hover:border-gray-400 border-solid border-1"
+                                            isHoverable={true}
+                                            >
+                                            <span className="font-semibold">{monthNames[m.month - 1]}</span>
+                                            <span className="text-sm">{m.year}</span>
                                             </Card>
-                                        ))}
-                                        {months.length === 0 && (
-                                            <span className="text-gray-500">No hay transacciones en este año</span>
-                                        )}
-                                    */
+                                        </div>
+                                        
+
+                                    ))
                                 }
-                                    
+                                {
+                                    months.length === 0 && (
+                                        <span className="text-gray-500">No hay transacciones en este año</span>
+                                    )
+                                }    
                                 </div>
-                                
+                                <Pagination
+                                isCompact
+                                showControls
+                                page={currentPage}
+                                onChange={(page) => {
+                                    setCurrentPage(page);
+                                }}
+                                total={totalPages}
+                                className={totalPages > 1 ? '' : 'hidden'}
+                                />
                             </div>
                         )
                     }
                 </div>
+                
                 
             </div>
         </Layout>
