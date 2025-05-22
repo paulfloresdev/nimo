@@ -25,7 +25,6 @@ import {
 function* loginSaga(action: any): Generator<any, any, any> {
     try {
         const res = yield call(loginAPI, action.payload);
-        console.log(res.data);
         yield put(loginSuccess(res.data));
     } catch (error: any) {
         yield put(loginFailure(error?.response?.data?.message || 'Error al iniciar sesión'));
@@ -53,7 +52,6 @@ function* logoutSaga(): Generator<any, any, any> {
 function* meSaga(): Generator<any, any, any> {
     try {
         const res = yield call(meAPI); // Llamada a la API
-        console.log('Respuesta de la API:', res); // Verifica qué datos estás recibiendo
         yield put(meSuccess(res));  // Se pasan los datos correctos
     } catch (error: any) {
         console.error("Error en meSaga:", error);

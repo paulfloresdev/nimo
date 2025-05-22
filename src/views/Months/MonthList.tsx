@@ -82,7 +82,6 @@ const MonthList: React.FC = () => {
                                     months.map((m) => (
                                         <div
                                         onClick={() => {
-                                            console.log('Click detectado.');
                                             navigate('/dashboard/month', { state: { year: m.year, month: m.month } });
                                         }}
                                         >

@@ -15,8 +15,6 @@ function* monthsWithSaga(action: any): Generator<any, any, any> {
         const { year, page } = action.payload;
         const res = yield call(getMonthsWithAPI, { year, page });
 
-        console.log("Respuesta de la API:", res);  // Puedes quitarlo después de verificar
-
         // Después de recibir los datos, despachamos la acción de éxito
         yield put(
             getMonthsWithSuccess({

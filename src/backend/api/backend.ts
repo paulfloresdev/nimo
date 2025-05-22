@@ -65,3 +65,24 @@ export const getMonthsWithRequest = async (data: { year?: number; page?: number 
     return await api.create(`${url.GET_MONTHS_WITH}?page=${page}`, body);
 };
 
+//  * getTransactions
+export const getTransactionsRequest = async (
+    year: number,
+    month: number,
+    data: {
+        concept?: string;
+        amount?: string;
+        category_id?: number;
+        type_id?: number;
+        card_id?: number;
+        order_by: number;
+        per_page?: number;
+        page?: number;
+    }
+) => await api.create(`${url.GET_TRANSACTIONS}/${year}/${month}`, data);
+
+//  * getCards
+export const getAllCardsRequest = async () => await api.get(`${url.GET_CARDS}`);
+
+
+

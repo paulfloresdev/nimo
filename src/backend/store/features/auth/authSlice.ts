@@ -69,7 +69,6 @@ const authSlice = createSlice({
         meSuccess: (state, action: PayloadAction<User>) => {
             state.loading = false;
             state.user = action.payload;
-            console.log(`meRequest: ${action.payload}`)
         },
         meFailure: (state, action: PayloadAction<string>) => {
             state.loading = false;

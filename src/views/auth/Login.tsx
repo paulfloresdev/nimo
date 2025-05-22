@@ -49,6 +49,7 @@ const Login: React.FC = () => {
                     <h1 className="text-xl font-semibold text-center">Inicio de Sesión</h1>
                     <Form onSubmit={handleSubmit} className="flex flex-col space-y-8">
                         <Input
+                            variant='faded'
                             isRequired
                             label="Correo electrónico"
                             placeholder="usuario@ejemplo.com"
@@ -59,6 +60,7 @@ const Login: React.FC = () => {
                         />
                         <div className='w-full flex flex-col items-end space-y-4'>
                             <Input
+                                variant='faded'
                                 isRequired
                                 label="Contraseña"
                                 placeholder="••••••••"

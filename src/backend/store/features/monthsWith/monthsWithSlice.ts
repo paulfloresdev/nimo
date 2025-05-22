@@ -27,9 +27,6 @@ const monthsWithSlice = createSlice({
         getMonthsWithRequest: (state, action: PayloadAction<{ year: number | undefined; page: number | undefined }>) => {
             state.loading = true;
             state.error = null;
-
-            console.log('year: '+action.payload.year);
-            console.log('page sent: '+action.payload.page);
         },
         // Acción para manejar la respuesta exitosa
         getMonthsWithSuccess: (
@@ -40,10 +37,6 @@ const monthsWithSlice = createSlice({
             state.data = action.payload.data;  // Guardamos los datos obtenidos (meses y años)
             state.page = action.payload.current_page;  // Actualizamos la página actual
             state.totalPages = action.payload.total_pages;  // Actualizamos el total de páginas
-
-            console.log('data: '+action.payload.data);
-            console.log('page: '+action.payload.current_page);
-            console.log('total: '+action.payload.total_pages);
         },
         // Acción para manejar los errores
         getMonthsWithFailure: (state, action: PayloadAction<string>) => {
