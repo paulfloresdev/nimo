@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Transaction {
+export interface Transaction {
     id: number;
     concept: string;
     amount: number;
@@ -41,21 +41,21 @@ const monthTransactionsSlice = createSlice({
     initialState,
     reducers: {
         getMonthTransactionsRequest: (
-        state,
-        _action: PayloadAction<{
-            year: number;
-            month: number;
-            data: {
-            concept?: string;
-            amount?: string;
-            category_id?: number;
-            type_id?: number;
-            card_id?: number;
-            order_by: number;
-            per_page?: number;
-            page?: number;
-            };
-        }>
+            state,
+            _action: PayloadAction<{
+                year: number;
+                month: number;
+                data: {
+                    concept?: string;
+                    amount?: string;
+                    category_id?: number;
+                    type_id?: number;
+                    card_id?: number;
+                    order_by: number;
+                    per_page?: number;
+                    page?: number;
+                };
+            }>
         ) => {
             state.loading = true;
             state.error = null;

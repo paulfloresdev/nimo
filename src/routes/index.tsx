@@ -6,6 +6,8 @@ import PrivateRoute from "../components/PrivateRoute.tsx";
 const Home = React.lazy(() => import("../views/Home.tsx"));
 const MonthList = React.lazy(() => import("../views/Months/MonthList.tsx"));
 const MonthDetail = React.lazy(() => import("../views/Months/MonthDetail.tsx"));
+const TransactionDetail = React.lazy(() => import("../views/Months/TransactionDetail.tsx"));
+const TransactionEdit = React.lazy(() => import("../views/Months/TransactionEdit.tsx"));
 
 const Test = React.lazy(() => import("../views/test.tsx"));
 const Login = React.lazy(() => import("../views/auth/Login.tsx"));
@@ -44,13 +46,32 @@ const AppRoutes = () => (
                 </React.Suspense>
             }
         />
+        <Route
+            path="/dashboard/month/transaction"
+            element={
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    <PrivateRoute>
+                        <TransactionDetail />
+                    </PrivateRoute>
+                </React.Suspense>
+            }
+        />
+        <Route
+            path="/dashboard/month/transaction/edit"
+            element={
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    <PrivateRoute>
+                        <TransactionEdit />
+                    </PrivateRoute>
+                </React.Suspense>
+            }
+        />
 
-        
         <Route
             path="/test"
             element={
                 <React.Suspense fallback={<div>Loading...</div>}>
-                    <Test/>
+                    <Test />
                 </React.Suspense>
             }
         />
@@ -58,7 +79,7 @@ const AppRoutes = () => (
             path="/login"
             element={
                 <React.Suspense fallback={<div>Loading...</div>}>
-                    <Login/>
+                    <Login />
                 </React.Suspense>
             }
         />

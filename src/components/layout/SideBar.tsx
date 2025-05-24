@@ -10,13 +10,13 @@ import { useNavigate } from 'react-router';
 
 const SideBar: React.FC<SideBarProps> = ({ page }) => {
     const dispatch = useDispatch();
-    const { user, loading, error } = useSelector((state: RootState) => state.auth);
+    const { user, loading } = useSelector((state: RootState) => state.auth);
     const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(meRequest());
     }, [dispatch]);
-    
+
     const handleLogout = () => {
         dispatch(logoutRequest())
         navigate('/login');
@@ -29,13 +29,13 @@ const SideBar: React.FC<SideBarProps> = ({ page }) => {
                 transition-all duration-300 ease-in-out
                 hidden lg:flex py-6
                 h-screen overflow-hidden
-                max-w-72 min-w-72
+                max-w-72
             `}
         >
             <nav className="flex flex-col px-3 h-full overflow-hidden">
                 {/* Logo */}
                 <div className="w-full flex justify-center mb-4 shrink-0">
-                    <img src="/assets/favicon.png" alt="Logo" className="w-16" />
+                    <img src="/assets/favicon.png" alt="Logo" className="w-14" />
                 </div>
 
                 {/* Menu options with scroll */}
@@ -83,42 +83,31 @@ const SideBar: React.FC<SideBarProps> = ({ page }) => {
                 <div className="shrink-0 mt-4">
                     {loading ? (
                         <div>
-                            <Divider className='mb-4'/>
-                            <div className="w-full h-14 flex flex-row items-center justify-start space-x-2 px-3">
+                            <Divider className='mb-4' />
+                            <div className="w-full h-10 flex flex-row items-center justify-start space-x-1 px-3">
                                 <Skeleton className="rounded-full">
-                                    <div className="h-10 w-14" />
+                                    <div className="h-10 w-12" />
                                 </Skeleton>
-                                <div className='w-full flex flex-col justify-start items-start'>
-                                    <Skeleton className="rounded-md mb-1">
-                                        <div className="h-4 w-32" />
-                                    </Skeleton>
-                                    <Skeleton className="rounded-md">
-                                        <div className="h-2 w-40" />
-                                    </Skeleton>
-                                </div>
                                 <DynamicFaIcon name="FaAngleUp" className="text-gray-400 ml-auto" />
                             </div>
                         </div>
                     ) : (
                         <div>
-                            <Divider className='mb-4'/>
+                            <Divider className='mb-4' />
                             <Dropdown>
                                 <DropdownTrigger>
                                     <Button
                                         variant="light"
-                                        className="w-full h-14 flex flex-row items-center justify-between space-x-2"
+                                        className="w-full h-10 flex flex-row items-center justify-start space-x-1"
                                     >
-                                        <div className="bg-neutral-200 w-14 h-10 rounded-full flex justify-center items-center border border-neutral-300">
+                                        <div className="bg-neutral-200 w-12 h-10 rounded-full flex justify-center items-center border border-neutral-300">
                                             <span className="font-semibold text-base text-neutral-950">
                                                 {
                                                     `${user?.name[0].toUpperCase()}${user?.lastname[0].toUpperCase()}`
                                                 }
                                             </span>
                                         </div>
-                                        <div className="flex flex-col justify-start items-start">
-                                            <span className="text-neutral-950 font-semibold">{`${user?.name} ${user?.lastname}`}</span>
-                                            <span className="text-xs text-gray-700">{user?.email}</span>
-                                        </div>
+
                                         <DynamicFaIcon name="FaAngleUp" className="text-gray-400 ml-auto" />
                                     </Button>
                                 </DropdownTrigger>
@@ -129,7 +118,7 @@ const SideBar: React.FC<SideBarProps> = ({ page }) => {
                                     </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                            
+
                         </div>
                     )}
                 </div>
