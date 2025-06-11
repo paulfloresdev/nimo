@@ -5,8 +5,10 @@ export interface Transaction {
     concept: string;
     amount: number;
     type: string;
+    notes: string | null;
     transaction_date: string;
     accounting_date: string;
+    updated_at: string;
     category_icon: string | null;
     card_bank_name: string | null;
     card_numbers: string;

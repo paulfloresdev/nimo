@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../backend/store/config/store";
 import { getMonthTransactionsRequest } from "../../backend/store/features/monthTransactions/monthTransactionsSlice";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Pagination, Select, SelectItem, Skeleton, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
+import { Autocomplete, AutocompleteItem, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Pagination, Progress, Select, SelectItem, Skeleton, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
 import DynamicFaIcon from "../../components/DynamicFaIcon";
 import { getAllCardsRequest } from "../../backend/store/features/allCards/allCardsSlice";
 import { useNavigate } from "react-router-dom";
@@ -50,7 +50,7 @@ export const types = [
     { key: 3, label: "Pago de TDC" },
 ]
 
-export const cardTypes = [
+const cardTypes = [
     { key: undefined, label: "Todos" },
     { key: 1, label: "Débito" },
     { key: 2, label: "Crédito" },
@@ -183,18 +183,25 @@ const MonthTransactions: React.FC<MonthTransactionsProps> = ({ year, month }) =>
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                         />
-                        <Select
+                        <Autocomplete
                             size="sm"
                             variant="flat"
                             className="w-2/12"
                             placeholder="Categoría"
-                            value={categoryId}
-                            onChange={(e) => setCategoryId(parseInt(e.target.value))}
+                            selectedKey={categoryId?.toString()}
+                            onSelectionChange={(key) => {
+                                if (key !== null) {
+                                    setCategoryId(parseInt(key as string));
+                                }
+                            }}
                         >
                             {categories.map((category) => (
-                                <SelectItem key={category.key}>{category.label}</SelectItem>
+                                <AutocompleteItem key={category.key}>
+                                    {category.label}
+                                </AutocompleteItem>
                             ))}
-                        </Select>
+                        </Autocomplete>
+
                         <Select
                             size="sm"
                             variant="flat"
@@ -287,7 +294,7 @@ const MonthTransactions: React.FC<MonthTransactionsProps> = ({ year, month }) =>
                 {
                     loading ? (
                         <div className="flex flex-col items-center justify-center">
-                            Cargando...
+                            <Progress isIndeterminate aria-label="Loading..." className="max-w-md" size="md" />
                         </div>
                     ) : <>
                         <Table
@@ -299,7 +306,7 @@ const MonthTransactions: React.FC<MonthTransactionsProps> = ({ year, month }) =>
                             classNames={classNames}
                         >
                             <TableHeader className="bg-transparent">
-                                <TableColumn className="text-gray-600 font-bold text-center">CAT</TableColumn>
+                                <TableColumn className="text-gray-600 font-bold text-center">{""}</TableColumn>
                                 <TableColumn className="text-gray-600 font-bold">CONCEPTO</TableColumn>
                                 <TableColumn className="text-gray-600 font-bold">MONTO</TableColumn>
                                 <TableColumn className="text-gray-600 font-bold text-center">VINCULOS</TableColumn>
@@ -307,31 +314,36 @@ const MonthTransactions: React.FC<MonthTransactionsProps> = ({ year, month }) =>
                                 <TableColumn className="text-gray-600 font-bold">BANCO</TableColumn>
                                 <TableColumn className="text-gray-600 font-bold">TARJETA</TableColumn>
 
-                                <TableColumn className="text-gray-600 ">ACCIONES</TableColumn>
+                                <TableColumn className="text-gray-600 ">{""}</TableColumn>
                             </TableHeader>
                             <TableBody>
                                 {transactions?.data && transactions.data.length > 0 ? (
                                     transactions.data.map((t) => (
-                                        <TableRow key={t.id}>
-                                            <TableCell className="">
+                                        <TableRow key={t.id} className="hover:bg-slate-100">
+                                            <TableCell className="w-8">
                                                 <div className="w-8 h-8 bg-slate-100 flex items-center justify-center rounded-full"><DynamicFaIcon className="w-4" name={t.category_icon} /></div>
                                             </TableCell>
-                                            <TableCell className="">{t.concept}</TableCell>
-                                            <TableCell className={`font-semibold ${t.amount > 0 ? 'text-emerald-500' : 'text-rose-500'}`}>${t.amount.toFixed(2)}</TableCell>
-                                            <TableCell className="text-center">{t.income_relation_count == 0 ? "-" : t.income_relation_count}</TableCell>
-                                            <TableCell className="">
+                                            <TableCell className="w-4/12 font-medium">{t.concept}</TableCell>
+                                            <TableCell className="w-2/12 flex flex-col">
+                                                <span className={`font-semibold ${t.amount > 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                                    ${t.amount.toFixed(2)}
+                                                </span>
+                                                <span className="text-xs text-gray-500">{t.type === 'INCOME' ? '(Ingreso)' : t.type === 'EXPENSE' ? '(Gasto)' : '(Pago)'}</span>
+                                            </TableCell>
+                                            <TableCell className="w-1/12 text-center">{t.income_relation_count == 0 ? "-" : t.income_relation_count}</TableCell>
+                                            <TableCell className="w-2/12">
                                                 <div className="w-full flex flex-col items-start justify-start">
                                                     <span>{formatDateToSpanish(t.transaction_date) || "-"}</span>
                                                     <span className="text-xs text-gray-500">{formatDateToSpanish(t.accounting_date) || "-"}</span>
                                                 </div>
                                             </TableCell>
-                                            <TableCell className="">
+                                            <TableCell className="w-2/12">
                                                 <div className="w-full flex flex-col items-start justify-start">
                                                     <span>{t.card_bank_name || "-"}</span>
                                                     <span className="text-xs text-gray-500">{t.card_type === 'CREDIT' ? 'Crédito' : 'Débito'}</span>
                                                 </div>
                                             </TableCell>
-                                            <TableCell className="">
+                                            <TableCell className="w-1/12">
                                                 <div className="flex flex-row r items-center space-x-1">
                                                     <div className={`${t.card_network_name === 'Visa' ? 'bg-blue-800' : ''} rounded-md w-11 p-2 flex flex-row justify-center items-center`}>
                                                         <img src={`${baseUrl}${t.card_network}`} alt="" />
@@ -340,7 +352,7 @@ const MonthTransactions: React.FC<MonthTransactionsProps> = ({ year, month }) =>
                                                 </div>
                                             </TableCell>
 
-                                            <TableCell >
+                                            <TableCell className="w-8">
                                                 <Dropdown>
                                                     <DropdownTrigger>
                                                         <Button variant="light">

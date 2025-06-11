@@ -8,6 +8,7 @@ const MonthList = React.lazy(() => import("../views/Months/MonthList.tsx"));
 const MonthDetail = React.lazy(() => import("../views/Months/MonthDetail.tsx"));
 const TransactionDetail = React.lazy(() => import("../views/Months/TransactionDetail.tsx"));
 const TransactionEdit = React.lazy(() => import("../views/Months/TransactionEdit.tsx"));
+const RecurrentList = React.lazy(() => import("../views/recurrents/RecurrentList.tsx"));
 
 const Test = React.lazy(() => import("../views/test.tsx"));
 const Login = React.lazy(() => import("../views/auth/Login.tsx"));
@@ -62,6 +63,17 @@ const AppRoutes = () => (
                 <React.Suspense fallback={<div>Loading...</div>}>
                     <PrivateRoute>
                         <TransactionEdit />
+                    </PrivateRoute>
+                </React.Suspense>
+            }
+        />
+
+        <Route
+            path="/dashboard/transactions"
+            element={
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    <PrivateRoute>
+                        <RecurrentList />
                     </PrivateRoute>
                 </React.Suspense>
             }

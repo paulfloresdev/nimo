@@ -81,8 +81,25 @@ export const getTransactionsRequest = async (
     }
 ) => await api.create(`${url.GET_TRANSACTIONS}/${year}/${month}`, data);
 
+//  * getContacts
+export const getContactsRequest = async (
+    data: {
+        page?: number;
+    }
+) => await api.get(`${url.GET_CONTACTS}`, data);
+
 //  * getCards
 export const getAllCardsRequest = async () => await api.get(`${url.GET_CARDS}`);
 
 
+//  ---INCOME RELATIONS--------------------------------------------------
 
+//  * getIncomeRelations
+export const getIncomeRelationsRequest = async (
+    data: {
+        contact_id?: number;
+        to_id?: number;
+        from_id?: number;
+        page?: number;
+    }
+) => await api.create(`${url.GET_INCOME_RELATIONS}`, data);

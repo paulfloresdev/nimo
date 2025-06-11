@@ -46,7 +46,7 @@ const SideBar: React.FC<SideBarProps> = ({ page }) => {
                             index={0}
                             label='Inicio'
                             icon='FaHome'
-                            href='/dashboard/'
+                            href='/dashboard'
                         />
                         <SideBarOption
                             page={page}
@@ -60,7 +60,7 @@ const SideBar: React.FC<SideBarProps> = ({ page }) => {
                             index={2}
                             label='Movimientos'
                             icon='FaExchangeAlt'
-                            href='/'
+                            href='/dashboard/transactions'
                         />
                         <SideBarOption
                             page={page}

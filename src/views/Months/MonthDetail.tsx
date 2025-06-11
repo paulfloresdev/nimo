@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import Layout from "../../components/layout/Layout";
-import { BreadcrumbItem, Breadcrumbs, Divider, Select, SelectItem, Tab, Tabs } from "@heroui/react";
+import { Select, SelectItem } from "@heroui/react";
 import { useLocation } from "react-router-dom";
 import { monthFullNames } from "../../types/Month";
 import MonthTransactions from "./MonthTransactions";
-import { div } from "framer-motion/client";
+import { MonthIncomeRelations } from "./MonthIncomeRelations";
 
-export const pages = [
+const pages = [
     { key: 1, label: "Movimientos" },
     { key: 2, label: "Balances" },
+    { key: 3, label: "Vinculados" },
 ]
 
 const MonthDetail: React.FC = () => {
@@ -45,27 +46,8 @@ const MonthDetail: React.FC = () => {
                         ))}
                     </Select>
                 </div>
-                {
-                    page == 1 && (
-                        <MonthTransactions year={year} month={month} />
-                    )
-                }
-
-                {
-                    /*
-                                        <Tabs aria-label="Options">
-                                            <Tab key="balances" title="Balances mensuales" className="h-full">
-                                                <div className="w-full bg-slate-200">
-                                                    as
-                                                </div>
-                                            </Tab>
-                                            <Tab key="transactions" title="Movimientos" className="h-full">
-                                                
-                                            </Tab>
-                    
-                                        </Tabs>
-                    */
-                }
+                {page == 1 && <MonthTransactions year={year} month={month} />}
+                {page == 3 && <MonthIncomeRelations year={year} month={month} />}
 
             </div>
         </Layout>

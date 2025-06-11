@@ -19,3 +19,9 @@ export const TRANSACTION_DESTROY = '/transactions'
 
 // CARDS
 export const GET_CARDS = '/cards'
+
+//  INCOME RELATIONS
+export const GET_INCOME_RELATIONS = '/income-relations/all'
+
+// CONTACTS
+export const GET_CONTACTS = '/contacts'
